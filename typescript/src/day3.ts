@@ -1,26 +1,34 @@
 import { FileReader } from './FileReader';
+import { InputParser } from './InputParser';
 
-function countTrees(forest: Array<string>): number {
-  let y = 0;
-  let x = 0;
+function areThereAvailableSpaces(steps: number, availableSpace: number): boolean {
+  return steps <= availableSpace
+}
+
+function encounterTree(square: string): number {
+  return square === "#" ? 1 : 0
+}
+
+function countTrees(forest: Array<string>, stepsX: number, stepsY: number): number {
   let countTrees = 0;
-  while (y < forest.length) {
-    x += 3;
-    y += 1;
-    if (x >= forest[y].length) {
-      console.log(x, forest[y].length);
-      x = forest[y].length - x;
-      y += 1;
-    }
-    if (forest[y].charAt(x) === '#') console.log({ x, y });
-    countTrees += forest[y].charAt(x) === '#' ? 1 : 0;
-    if (y >= forest.length - 1) break;
+  let currentX = 0
+  for (let y = stepsY; y < forest.length; y += stepsY) {
+    const availableXSpaces = forest[y].length - 1 -  currentX
+    if (!areThereAvailableSpaces(stepsX, availableXSpaces))
+      currentX = stepsX - availableXSpaces
+    else
+      currentX += stepsX 
+
+    countTrees += encounterTree(forest[y].charAt(currentX))
   }
   return countTrees;
 }
 
-export function howManyTrees() {
-  const reader = new FileReader('./src/forest.txt');
-
-  return countTrees(reader.getLines());
+interface Steps {
+  stepsX: number, stepsY: number
+}
+export function howManyTrees(foresFile: string, steps: Steps): number {
+  const reader = new FileReader(foresFile);
+  const forest = new InputParser(reader.getContent()).getLines();
+  return countTrees(forest, steps.stepsX, steps.stepsY);
 }
