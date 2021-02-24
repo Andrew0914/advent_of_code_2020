@@ -1,25 +1,18 @@
 import { FileReader } from './FileReader';
 import { InputParser } from './InputParser';
 
-function areThereAvailableSpaces(steps: number, availableSpace: number): boolean {
-  return steps <= availableSpace
-}
-
 function encounterTree(square: string): number {
   return square === "#" ? 1 : 0
 }
 
 function countTrees(forest: Array<string>, stepsX: number, stepsY: number): number {
   let countTrees = 0;
-  let currentX = 0
+  let x = 0
   for (let y = stepsY; y < forest.length; y += stepsY) {
-    const availableXSpaces = forest[y].length - 1 -  currentX
-    if (!areThereAvailableSpaces(stepsX, availableXSpaces))
-      currentX = stepsX - availableXSpaces
-    else
-      currentX += stepsX 
-
-    countTrees += encounterTree(forest[y].charAt(currentX))
+    x += stepsX
+    if (x  >= forest[y].length - 1)
+      x = x - (forest[y].length - 1)    
+    countTrees += encounterTree(forest[y].charAt(x))
   }
   return countTrees;
 }
