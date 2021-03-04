@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-
+import { InputParser } from './InputParser';
 export class FileReader {
   private filePath: string;
 
@@ -10,5 +10,9 @@ export class FileReader {
   getContent(): string {
     const buffer = readFileSync(this.filePath);
     return buffer.toString();
+  }
+
+  getLines(): Array<string> {
+    return new InputParser(this.getContent()).getLines();
   }
 }
