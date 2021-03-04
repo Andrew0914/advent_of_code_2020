@@ -25,7 +25,7 @@ export class SeatFinder {
     this.boardingPasses = new FileReader(boardingPassesFilePath).getLines();
   }
 
-  public findPosition(
+  private findPosition(
     passInfo: string,
     index: number,
     from: number,
@@ -68,7 +68,7 @@ export class SeatFinder {
     return row * 8 + column;
   }
 
-  public mapPassesWithID(): Map<number, string> {
+  private mapPassesWithID(): Map<number, string> {
     const mapPassesWithID = new Map<number, string>();
     this.boardingPasses.forEach(pass => {
       const passID = this.calculateID(
@@ -85,5 +85,31 @@ export class SeatFinder {
       (a, b) => a - b // si el valor es negativo = menor, positivo = mayor, 0 = iguales
     );
     return boardingPassesIDs[boardingPassesIDs.length - 1];
+  }
+
+  public findMySeat(): Array<number> {
+    let boardingPassesIDs = Array.from(this.mapPassesWithID().keys()).sort(
+      (a, b) => a - b
+    );
+    // remove very front row
+    boardingPassesIDs = boardingPassesIDs.splice(
+      8,
+      boardingPassesIDs.length - 1
+    );
+    // remove very back row
+    boardingPassesIDs = boardingPassesIDs.splice(
+      0,
+      boardingPassesIDs.length - 9
+    );
+
+    const realSeatsIds = Array.from(
+      new Array(boardingPassesIDs.length).keys()
+    ).map(seatId => seatId + boardingPassesIDs[0]);
+
+    return realSeatsIds.filter(
+      realSeaId =>
+        boardingPassesIDs.findIndex(passId => passId === realSeaId) === -1
+    );
+
   }
 }
