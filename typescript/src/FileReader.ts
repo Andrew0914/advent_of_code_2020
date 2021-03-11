@@ -12,7 +12,7 @@ export class FileReader {
     return buffer.toString();
   }
 
-  getLines(): Array<string> {
-    return new InputParser(this.getContent()).getLines();
+  getLines(sepatator: string | RegExp = '\n'): Array<string> {
+    return new InputParser(this.getContent()).getLines(sepatator);
   }
 }
