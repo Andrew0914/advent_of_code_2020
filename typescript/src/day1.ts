@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 
 function getReportEntries(): Array<number> {
-  const buffer = readFileSync('./src/expense_report.txt');
+  const buffer = readFileSync('./src/assets/expense_report.txt');
   return buffer
     .toString()
     .split('\n')

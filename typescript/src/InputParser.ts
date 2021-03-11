@@ -5,8 +5,8 @@ export class InputParser {
     this.input = input
   }
 
-  getLines(): Array<string> {
-    return this.input.split('\n');
+  getLines(sepatator: string | RegExp = '\n'): Array<string> {
+    return this.input.split(sepatator);
   }
 
   getLinesCount(): number {
