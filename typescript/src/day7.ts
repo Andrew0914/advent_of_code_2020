@@ -34,8 +34,8 @@ export class LuggageValidator {
     return mapRuleParts
   }
 
-  private mapRules(): Map<string, any> {
-    const rulesMap = new Map<string, any>()
+  private mapRules(): Map<string, Map<string, number>> {
+    const rulesMap = new Map<string, Map<string, number>>()
     this.getParsedRules().forEach(rule => {
       const [ruleKey, ruleParts] = rule
       rulesMap.set(ruleKey[0], this.mapRuleParts(ruleParts))
@@ -74,4 +74,22 @@ export class LuggageValidator {
     return count
   }
 
+  private countBagsInsideOf(bagKeyColor: string, rulesMap: Map<string, Map<string, number>>): number {
+    let count = 0
+    const ruleMapParts = rulesMap.get(bagKeyColor)
+    if (ruleMapParts && ruleMapParts.size <= 0)
+      return count
+    else {
+      ruleMapParts?.forEach((bagCount, bagKey) => {
+        count += bagCount
+        count += bagCount * this.countBagsInsideOf(bagKey, rulesMap)
+      })
+    }
+    return count
+  }
+
+  public howManyBagsAreInsideOf(bagKeyColor: string): number {
+    const rulesMap = this.mapRules();
+    return this.countBagsInsideOf(bagKeyColor, rulesMap)
+  }
 }
