@@ -60,4 +60,49 @@ defmodule EncodingError do
     |> parse_numbers()
     |> find_invalid_number(preamble)
   end
+
+  #  --- PART 2 ---
+
+  defp find_numbers_that_sum(sum, all_numbers, start_index)
+       when start_index >= length(all_numbers),
+       do: {:error, "It couldn't found weakness correctly"}
+
+  defp find_numbers_that_sum(sum, all_numbers, start_index \\ 0) do
+    possible_weakness =
+      all_numbers
+      |> Enum.slice(start_index, length(all_numbers) - start_index)
+      |> Enum.reduce_while({[], 0}, fn {number, index}, acc ->
+        {contiguous_numbers, summation} = acc
+        new_summation = summation + number
+        acc = {contiguous_numbers ++ [number], new_summation}
+
+        cond do
+          new_summation < sum -> {:cont, acc}
+          new_summation > sum -> {:halt, {:exceeded, acc}}
+          new_summation == sum -> {:halt, {:founded, acc}}
+        end
+      end)
+
+    if(is_tuple(possible_weakness) and elem(possible_weakness, 0) == :founded) do
+      possible_weakness
+    else
+      find_numbers_that_sum(sum, all_numbers, start_index + 1)
+    end
+  end
+
+  def find_encryptation_weakness(sum) do
+    all_numbers =
+      get_numbers_series()
+      |> parse_numbers()
+
+    case find_numbers_that_sum(sum, all_numbers, 0) do
+      {:founded, {contiguous_numbers, _summation}} ->
+        sorted_numbers = Enum.sort(contiguous_numbers)
+
+        Enum.at(sorted_numbers, 0) + Enum.at(sorted_numbers, length(sorted_numbers) - 1)
+
+      {:error, message} ->
+        {:error, message}
+    end
+  end
 end
