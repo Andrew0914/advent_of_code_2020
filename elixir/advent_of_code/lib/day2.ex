@@ -1,6 +1,6 @@
 defmodule Puzzle2 do
   def password_contracts() do
-    File.read!("passwords.txt")
+    File.read!("assets/passwords.txt")
     |> String.split("\n")
     |> Enum.map(fn line -> String.split(line, " ") end)
     |> Enum.map(fn str_contract -> format_contract(str_contract) end)
