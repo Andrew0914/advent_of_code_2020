@@ -102,7 +102,7 @@ defmodule EncodingErrroTest do
     assert numbers == [1, 2, 3, 4]
   end
 
-  test "Find contiguos numbers taht sum given number" do
+  test "Find contiguos numbers that sum given number" do
     # Arrange
     numbers = [
       35,
