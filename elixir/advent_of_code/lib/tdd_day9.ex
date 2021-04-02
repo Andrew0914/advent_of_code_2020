@@ -72,4 +72,9 @@ defmodule TDDEncodingError do
           else: get_contiguos_numbers_that_sum({sum, sum_index}, numbers, preamble, index + 1)
     end
   end
+
+  def sum_min_max(numbers) do
+    {min, max} = Enum.min_max(numbers)
+    min + max
+  end
 end

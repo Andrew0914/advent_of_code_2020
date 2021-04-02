@@ -171,4 +171,13 @@ defmodule EncodingErrroTest do
     # Assert
     assert contiguos_numbers_that_sum == {:error, "It could not find numbers"}
   end
+
+  test "Sum the min and max numbers in a list" do
+    # Arrange
+    numbers =[15, 25, 47, 40]
+    # Act
+    sum = TDDEncodingError.sum_min_max(numbers)
+    # Assert
+    assert sum == 62
+  end
 end
