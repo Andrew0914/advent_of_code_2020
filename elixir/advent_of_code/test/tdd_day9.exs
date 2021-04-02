@@ -44,4 +44,15 @@ defmodule EncodingErrroTest do
     assert numbers_to_check == [40, 62, 55, 65]
   end
 
+  test "Get numbers in preamble starting from index" do
+    # Arrange
+    numbers = [35, 20, 15, 25, 47, 40, 62, 55, 65]
+    index = 7
+    preamble = 5
+    # Act
+    preamble_numbers = TDDEncodingError.get_numbers_in_preamble(numbers, index, preamble)
+    # Assert
+    assert preamble_numbers == [15, 25, 47, 40, 62]
+  end
+
 end
