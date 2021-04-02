@@ -30,7 +30,7 @@ defmodule EncodingErrroTest do
     # Act
     invalid_number = TDDEncodingError.get_invalid_number(numbers, preamble)
     # Assert
-    assert invalid_number == 127
+    assert invalid_number == {127, 14}
   end
 
   test "Preamble must not be higher tant numbers list length" do
@@ -127,7 +127,7 @@ defmodule EncodingErrroTest do
       576
     ]
 
-    sum = 127
+    sum = {127, 14}
     preamble = 5
     # Act
     contiguos_numbers_that_sum =
@@ -135,5 +135,40 @@ defmodule EncodingErrroTest do
 
     # Assert
     assert contiguos_numbers_that_sum == [15, 25, 47, 40]
+  end
+
+  test "Return error if it could not find contiguos number" do
+    # Arrange
+    numbers = [
+      35,
+      20,
+      15,
+      25,
+      47,
+      90,
+      62,
+      55,
+      65,
+      95,
+      102,
+      117,
+      150,
+      182,
+      127,
+      219,
+      299,
+      277,
+      309,
+      576
+    ]
+
+    sum = {127, 14}
+    preamble = 5
+    # Act
+    contiguos_numbers_that_sum =
+      TDDEncodingError.get_contiguos_numbers_that_sum(sum, numbers, preamble)
+
+    # Assert
+    assert contiguos_numbers_that_sum == {:error, "It could not find numbers"}
   end
 end
