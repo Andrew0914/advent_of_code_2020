@@ -14,11 +14,13 @@ defmodule TDDEncodingError do
     |> Enum.map(&(Enum.at(numbers, index) - &1))
   end
 
+  def get_invalid_number(numbers, preamble) when preamble >= length(numbers),
+    do: {:error, "Preamble must be lower tnat the numbers length"}
+
   def get_invalid_number(numbers, preamble) do
     numbers
     |> Enum.with_index()
-    |> get_numbers_to_check(preamble)
-    |> Enum.reduce_while(0, fn {number, index}, _acc ->
+q    |> Enum.reduce_while(0, fn {number, index}, _acc ->
       differences = get_diff_with_each_preamble_number(numbers, index, preamble)
       no_matches = get_numbers_in_preamble(numbers, index, preamble) -- differences
       if length(no_matches) == length(differences), do: {:halt, number}, else: {:cont, nil}

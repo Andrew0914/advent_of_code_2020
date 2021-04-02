@@ -33,6 +33,21 @@ defmodule EncodingErrroTest do
     assert invalid_number == 127
   end
 
+  test "Preamble must not be higher tant numbers list length" do
+    # Arrange
+    numbers = [
+      35,
+      20,
+      15
+    ]
+
+    preamble = 5
+    # Act
+    invalid_number = TDDEncodingError.get_invalid_number(numbers, preamble)
+    # Assert
+    assert elem(invalid_number, 0) == :error
+  end
+
   test "Get number to check after preamble" do
     # Arrange
     numbers = [35, 20, 15, 25, 47, 40, 62, 55, 65]
@@ -61,7 +76,13 @@ defmodule EncodingErrroTest do
     index_of_given_number = 7
     preamble = 3
     # Act
-    differences = TDDEncodingError.get_diff_with_each_preamble_number(numbers, index_of_given_number, preamble)
+    differences =
+      TDDEncodingError.get_diff_with_each_preamble_number(
+        numbers,
+        index_of_given_number,
+        preamble
+      )
+
     # Assert
     assert differences == [8, 15, -7]
   end
