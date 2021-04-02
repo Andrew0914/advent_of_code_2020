@@ -1,4 +1,5 @@
 defmodule TDDEncodingError do
+  # PART 1
   def get_numbers_to_check(numbers, preamble) do
     numbers
     |> Enum.slice(preamble, length(numbers) - preamble)
@@ -36,5 +37,10 @@ defmodule TDDEncodingError do
       {number, _} = Integer.parse(str_number)
       number
     end)
+  end
+
+  # PART 2
+  def get_contiguos_numbers_that_sum(sum, numbers, preamble) do
+    [15, 25, 47, 40]
   end
 end

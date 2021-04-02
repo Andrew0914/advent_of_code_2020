@@ -101,4 +101,39 @@ defmodule EncodingErrroTest do
     # Assert
     assert numbers == [1, 2, 3, 4]
   end
+
+  test "Find contiguos numbers taht sum given number" do
+    # Arrange
+    numbers = [
+      35,
+      20,
+      15,
+      25,
+      47,
+      40,
+      62,
+      55,
+      65,
+      95,
+      102,
+      117,
+      150,
+      182,
+      127,
+      219,
+      299,
+      277,
+      309,
+      576
+    ]
+
+    sum = 127
+    preamble = 5
+    # Act
+    contiguos_numbers_that_sum =
+      TDDEncodingError.get_contiguos_numbers_that_sum(sum, numbers, preamble)
+
+    # Assert
+    assert contiguos_numbers_that_sum == [15, 25, 47, 40]
+  end
 end
