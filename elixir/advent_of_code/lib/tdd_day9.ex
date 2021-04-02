@@ -41,6 +41,23 @@ defmodule TDDEncodingError do
 
   # PART 2
   def get_contiguos_numbers_that_sum(sum, numbers, preamble) do
-    [15, 25, 47, 40]
+    {status, contiguous_numbers} =
+      numbers
+      |> Enum.reduce_while({[], 0}, fn number, acc ->
+        {last_numbers, last_sum} = acc
+        acc = {last_numbers ++ [number], last_sum + number}
+
+        cond do
+          last_sum + number == sum -> {:halt, {:fit, elem(acc, 0)}}
+          last_sum + number < sum -> {:cont, acc}
+          last_sum + number > sum -> {:halt, {:overflow, elem(acc, 0)}}
+        end
+      end)
+
+    case status do
+      :fit -> contiguous_numbers
+      :low -> {status, contiguous_numbers}
+      :overflow -> {status, contiguous_numbers}
+    end
   end
 end
