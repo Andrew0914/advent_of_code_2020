@@ -20,10 +20,21 @@ defmodule TDDEncodingError do
   def get_invalid_number(numbers, preamble) do
     numbers
     |> Enum.with_index()
-q    |> Enum.reduce_while(0, fn {number, index}, _acc ->
+    |> get_numbers_to_check(preamble)
+    |> Enum.reduce_while(0, fn {number, index}, _acc ->
       differences = get_diff_with_each_preamble_number(numbers, index, preamble)
       no_matches = get_numbers_in_preamble(numbers, index, preamble) -- differences
       if length(no_matches) == length(differences), do: {:halt, number}, else: {:cont, nil}
+    end)
+  end
+
+  def get_numbers(content) do
+    content
+    |> String.split(~r/\r\n|\n/)
+    |> Enum.filter(&(&1 != ""))
+    |> Enum.map(fn str_number ->
+      {number, _} = Integer.parse(str_number)
+      number
     end)
   end
 end

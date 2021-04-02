@@ -86,4 +86,19 @@ defmodule EncodingErrroTest do
     # Assert
     assert differences == [8, 15, -7]
   end
+
+  test "A list of numbers is gotten from file content" do
+    # Arrange
+    content = """
+    1
+    2
+    3
+    4
+    """
+
+    # Act
+    numbers = TDDEncodingError.get_numbers(content)
+    # Assert
+    assert numbers == [1, 2, 3, 4]
+  end
 end
