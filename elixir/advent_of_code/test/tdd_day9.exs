@@ -55,4 +55,15 @@ defmodule EncodingErrroTest do
     assert preamble_numbers == [15, 25, 47, 40, 62]
   end
 
+  test "Find differences between number under check and each number in its preamble" do
+    # Arrange
+    numbers = [35, 20, 15, 25, 47, 40, 62, 55, 65]
+    number_under_check = 55
+    preamble = 3
+    # Act
+    differences = find_differences(numbers , number_under_check, preamble)
+    # Assert
+    assert differences == [8, 15, -7]
+  end
+
 end
