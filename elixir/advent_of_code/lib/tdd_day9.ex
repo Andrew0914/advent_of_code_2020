@@ -10,11 +10,6 @@ defmodule TDDEncodingError do
     |> Enum.slice(index - preamble, preamble)
   end
 
-  def get_diff_with_each_preamble_number(numbers, index, preamble) do
-    get_numbers_in_preamble(numbers, index, preamble)
-    |> Enum.map(&(Enum.at(numbers, index) - &1))
-  end
-
   def get_invalid_number(numbers, preamble) when preamble >= length(numbers),
     do: {:error, "Preamble must be lower tnat the numbers length"}
 
@@ -23,8 +18,10 @@ defmodule TDDEncodingError do
     |> Enum.with_index()
     |> get_numbers_to_check(preamble)
     |> Enum.reduce_while(0, fn {number, index}, _acc ->
-      differences = get_diff_with_each_preamble_number(numbers, index, preamble)
-      no_matches = get_numbers_in_preamble(numbers, index, preamble) -- differences
+      numbers_in_preamble = get_numbers_in_preamble(numbers, index, preamble)
+      differences = numbers_in_preamble |> Enum.map(&(number - &1))
+
+      no_matches = numbers_in_preamble -- differences
 
       if length(no_matches) == length(differences),
         do: {:halt, {number, index}},

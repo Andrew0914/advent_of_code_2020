@@ -70,22 +70,22 @@ defmodule EncodingErrroTest do
     assert preamble_numbers == [15, 25, 47, 40, 62]
   end
 
-  test "Find differences between given number and each number in its preamble" do
-    # Arrange
-    numbers = [35, 20, 15, 25, 47, 40, 62, 55, 65]
-    index_of_given_number = 7
-    preamble = 3
-    # Act
-    differences =
-      TDDEncodingError.get_diff_with_each_preamble_number(
-        numbers,
-        index_of_given_number,
-        preamble
-      )
+  # test "Find differences between given number and each number in its preamble" do
+  #   # Arrange
+  #   numbers = [35, 20, 15, 25, 47, 40, 62, 55, 65]
+  #   index_of_given_number = 7
+  #   preamble = 3
+  #   # Act
+  #   differences =
+  #     TDDEncodingError.get_diff_with_each_preamble_number(
+  #       numbers,
+  #       index_of_given_number,
+  #       preamble
+  #     )
 
-    # Assert
-    assert differences == [8, 15, -7]
-  end
+  #   # Assert
+  #   assert differences == [8, 15, -7]
+  # end
 
   test "A list of numbers is gotten from file content" do
     # Arrange
