@@ -32,4 +32,16 @@ defmodule EncodingErrroTest do
     # Assert
     assert invalid_number == 127
   end
+
+  test "Get number to check after preamble" do
+    # Arrange
+    numbers = [35, 20, 15, 25, 47, 40, 62, 55, 65]
+
+    preamble = 5
+    # Act
+    numbers_to_check = TDDEncodingError.get_numbers_to_check(numbers, preamble)
+    # Assert
+    assert numbers_to_check == [40, 62, 55, 65]
+  end
+
 end
