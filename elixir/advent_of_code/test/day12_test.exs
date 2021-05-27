@@ -108,7 +108,6 @@ defmodule NavigationSystemTest do
     ]
   end
 
-  # TODO Create method to satisfy this test
   test "Perform all instructions gets navigation info" do
     # Arrange
     instructions = [{"F", 10}, {"N", 3}, {"F", 7}, {"R", 90}, {"F",11}]

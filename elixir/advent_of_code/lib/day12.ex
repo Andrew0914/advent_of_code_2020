@@ -51,6 +51,12 @@ defmodule NavigationSystem do
     |> Map.put(cardinal_point, Map.get(current_points, cardinal_point) + distance)
   end
 
+  # TODO update do_instruction functions to return a tuple with updated information (whatever a map or and array(solution 1 or 2))
+  # TODO apply tuples from do_instruction functions into map on solution 1
+  # TODO update tests for do_instruction functions
+  # TODO create do_instruction functions to waypoint's rotatio L,R
+  # TODO create do_instruction function to movepoint's forwarding F
+
   defp update_index(navigation) do
     navigation |> Map.put("index", Map.get(navigation, "index") + 1)
   end
