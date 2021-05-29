@@ -43,6 +43,7 @@ defmodule NavigationSystemTest do
       {"S", 270, "E"}
     ]
   end
+
   # N S E W
   test_with_params "Move to certain cardinal point",
     fn current_points, cardinal_point, distance, expected ->
@@ -110,9 +111,25 @@ defmodule NavigationSystemTest do
 
   test "Perform all instructions gets navigation info" do
     # Arrange
-    instructions = [{"F", 10}, {"N", 3}, {"F", 7}, {"R", 90}, {"F",11}]
-    initial_navigation = %{"index" => 0, "E" => 0, "W" => 0, "N" => 0, "S" => 0, "direction" => "E"}
-    expected_navigation = %{"index" => 5, "E" => 17, "W" => 0, "N" => 3, "S" => 11, "direction" => "S"}
+    instructions = [{"F", 10}, {"N", 3}, {"F", 7}, {"R", 90}, {"F", 11}]
+
+    initial_navigation = %{
+      "index" => 0,
+      "E" => 0,
+      "W" => 0,
+      "N" => 0,
+      "S" => 0,
+      "direction" => "E"
+    }
+
+    expected_navigation = %{
+      "index" => 5,
+      "E" => 17,
+      "W" => 0,
+      "N" => 3,
+      "S" => 11,
+      "direction" => "S"
+    }
 
     # Act
     navigation = NavigationSystem.navigate(initial_navigation, instructions)
@@ -122,10 +139,10 @@ defmodule NavigationSystemTest do
   end
 
   test "Calculate distance with navigation system" do
-    #Arrange
+    # Arrange
     navigation = %{"index" => 5, "E" => 17, "W" => 0, "N" => 3, "S" => 11, "direction" => "S"}
     expected_distance = 25
-    #Act
+    # Act
     distance = navigation |> NavigationSystem.calculate_distance()
     # Assert
     assert distance == expected_distance
@@ -141,4 +158,77 @@ defmodule NavigationSystemTest do
     assert tuple_instruction == expected_tuple
   end
 
+  test "Rotate all points in the way point to the right" do
+    # Arrange
+    current_points = %{"N" => 1, "W" => 8, "movepoint" => %{"N" => 10, "W" => 80}}
+    expected_points = %{"E" => 1, "N" => 8, "movepoint" => %{"N" => 10, "W" => 80}}
+    # Act
+    rotated_points = NavigationSystem.do_instruction(current_points, "R", 90, :waypoint)
+    # Assert
+    assert rotated_points == expected_points
+  end
+
+  test "Rotate all points in the way point to the left" do
+    # Arrange
+    current_points = %{"N" => 1, "W" => 8, "movepoint" => %{"N" => 10, "W" => 80}}
+    expected_points = %{"W" => 1, "S" => 8, "movepoint" => %{"N" => 10, "W" => 80}}
+    # Act
+    rotated_points = NavigationSystem.do_instruction(current_points, "L", 90, :waypoint)
+    # Assert
+    assert rotated_points == expected_points
+  end
+
+  test "Move forward base on waypoint updates movepoint" do
+    # Arrange
+    current_points = %{"S" => 10, "E" => 4, "movepoint" => %{"E" => 170, "N" => 38}}
+    expected_points = %{"S" => 10, "E" => 4, "movepoint" => %{"E" => 214, "S" => 72}}
+    # Act
+    updated_points = NavigationSystem.do_instruction(current_points, "F", 11, :waypoint)
+    # Asserr
+    assert updated_points == expected_points
+  end
+
+  test "Navigate waypoint to an opposite cardinal point we currently have" do
+    # Arrange
+    init_navigation = %{"E" => 10, "N" => 50, movepoint: %{}}
+    expected_navigation = %{"W" => 10, "N" => 50, movepoint: %{}}
+    # Act
+    navigation = NavigationSystem.do_instruction(init_navigation, "W", 20, :waypoint)
+    # Assert
+    assert navigation == expected_navigation
+  end
+
+  test "Navigate waypoint to a same cardinal point we currently have" do
+    # Arrange
+    init_navigation = %{"E" => 10, "N" => 50, movepoint: %{}}
+    expected_navigation = %{"E" => 10, "N" => 70, movepoint: %{}}
+    # Act
+    navigation = NavigationSystem.do_instruction(init_navigation, "N", 20, :waypoint)
+    # Assert
+    assert navigation == expected_navigation
+  end
+
+  test "Sample peform navigation system with waypoint" do
+    # Arrange
+    instructions = [{"F", 10}, {"N", 3}, {"F", 7}, {"R", 90}, {"F", 11}]
+
+    initial_navigation = %{
+      "index" => 0,
+      "E" => 10,
+      "N" => 1,
+      "movepoint" => %{"E" => 0, "N" => 0}
+    }
+
+    expected_navigation = %{
+      "E" => 4,
+      "S" => 10,
+      "index" => 5,
+      "movepoint" => %{"E" => 214, "S" => 72}
+    }
+
+    # Act
+    navigation = NavigationSystem.navigate(initial_navigation, instructions, :waypoint)
+    # Assert
+    assert navigation == expected_navigation
+  end
 end

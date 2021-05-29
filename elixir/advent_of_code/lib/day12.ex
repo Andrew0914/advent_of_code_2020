@@ -24,15 +24,8 @@ defmodule NavigationSystem do
     |> get_name_origin()
   end
 
-  def do_instruction(current_points, "R", degrees) do
-    new_direction = Map.get(current_points, "direction") |> where_it_does_turn("R", degrees)
-
-    current_points
-    |> Map.put("direction", new_direction)
-  end
-
-  def do_instruction(current_points, "L", degrees) do
-    new_direction = Map.get(current_points, "direction") |> where_it_does_turn("L", degrees)
+  def do_instruction(current_points, turn, degrees) when turn == "R" or turn == "L" do
+    new_direction = Map.get(current_points, "direction") |> where_it_does_turn(turn, degrees)
 
     current_points
     |> Map.put("direction", new_direction)
@@ -51,10 +44,82 @@ defmodule NavigationSystem do
     |> Map.put(cardinal_point, Map.get(current_points, cardinal_point) + distance)
   end
 
-  # TODO update do_instruction functions to return a tuple with updated information (whatever a map or and array(solution 1 or 2))
-  # TODO apply tuples from do_instruction functions into map on solution 1
-  # TODO update tests for do_instruction functions
-  # TODO create do_instruction functions to waypoint's rotatio L,R
+  # Specials for solution 2
+
+  def do_instruction(current_points, turn, degrees, :waypoint) when turn == "R" or turn == "L" do
+    current_points
+    |> Enum.map(fn {key, value} ->
+      if key != "movepoint" and key != "index",
+        do: {where_it_does_turn(key, turn, degrees), value},
+        else: {key, value}
+    end)
+    |> Map.new()
+  end
+
+  def calculate_movepoint(movepoint, movement) do
+    movepoint
+    |> Enum.map(fn {key, value} ->
+      cond do
+        key == "E" or key == "W" ->
+          {mkey, mvalue} = movement |> Enum.find(fn {mkey, _} -> mkey == "E" or mkey == "W" end)
+
+          cond do
+            key == mkey ->
+              {key, mvalue + value}
+
+            true ->
+              {if(value > mvalue, do: key, else: mkey), abs(value - mvalue)}
+          end
+
+        key == "N" or key == "S" ->
+          {mkey, mvalue} = movement |> Enum.find(fn {mkey, _} -> mkey == "N" or mkey == "S" end)
+
+          cond do
+            key == mkey ->
+              {key, mvalue + value}
+
+            true ->
+              {if(value > mvalue, do: key, else: mkey), abs(value - mvalue)}
+          end
+      end
+    end)
+    |> Map.new()
+  end
+
+  def do_instruction(current_points, "F", distance, :waypoint) do
+    current_movepoint =
+      current_points["movepoint"] |> Enum.map(fn {key, value} -> {key, value} end)
+
+    new_movement =
+      current_points
+      |> Enum.filter(fn {key, _} -> key != "movepoint" end)
+      |> Enum.map(fn {key, value} -> {key, value * distance} end)
+
+    calculated_movepoin =
+      current_movepoint
+      |> calculate_movepoint(new_movement)
+
+    current_points |> Map.put("movepoint", calculated_movepoin)
+  end
+
+  def what_key(key) do
+    %{"N" => "S", "S" => "N", "E" => "W", "W" => "E"} |> Map.get(key)
+  end
+
+  # test to just have to keys for way point
+  def do_instruction(current_points, cardinal_point, distance, :waypoint) do
+    if current_points[cardinal_point] == nil do
+      {wkey, wvalue} =
+        current_points |> Enum.find(fn {key, value} -> key == what_key(cardinal_point) end)
+
+      current_points
+      |> Map.delete(wkey)
+      |> Map.put(if(distance > wvalue, do: cardinal_point, else: wkey), abs(distance - wvalue))
+    else
+      do_instruction(current_points, cardinal_point, distance)
+    end
+  end
+
   # TODO create do_instruction function to movepoint's forwarding F
 
   defp update_index(navigation) do
@@ -97,6 +162,38 @@ defmodule NavigationSystem do
       File.read!(file_path)
       |> String.split(~r/\r\n|\n/)
       |> Enum.map(&parse_instruction/1)
+
     initial_navigation |> navigate(instructions) |> calculate_distance()
+  end
+
+  def navigate(navigation, instructions, :waypoint) do
+    if navigation["index"] >= length(instructions) do
+      navigation
+    else
+      {action, value} = instructions |> Enum.at(navigation["index"])
+
+      do_instruction(navigation, action, value, :waypoint)
+      |> update_index()
+      |> navigate(instructions, :waypoint)
+    end
+  end
+
+  def solution_two(file_path) do
+    initial_navigation = %{
+      "index" => 0,
+      "E" => 10,
+      "N" => 1,
+      "movepoint" => %{"E" => 0, "N" => 0}
+    }
+
+    instructions =
+      File.read!(file_path)
+      |> String.split(~r/\r\n|\n/)
+      |> Enum.map(&parse_instruction/1)
+
+    initial_navigation
+    |> navigate(instructions, :waypoint)
+    |> Map.get("movepoint")
+    |> Enum.reduce(0, fn {key, value}, acc -> acc + value end)
   end
 end
