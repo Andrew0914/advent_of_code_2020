@@ -4,7 +4,7 @@ defmodule NavigationSystemTest do
 
   test_with_params "Determine position after turning left",
     fn origin, degrees, expected ->
-      assert NavigationSystem.where_it_does_turn(origin, "L", degrees) == expected
+      assert NavigationSystem.where_does_it_turn(origin, "L", degrees) == expected
     end
     do
     [
@@ -25,7 +25,7 @@ defmodule NavigationSystemTest do
 
   test_with_params "Determine position after turning right",
     fn origin, degrees, expected ->
-      assert NavigationSystem.where_it_does_turn(origin, "R", degrees) == expected
+      assert NavigationSystem.where_does_it_turn(origin, "R", degrees) == expected
     end
     do
     [
@@ -55,14 +55,14 @@ defmodule NavigationSystemTest do
     end
     do
     [
-      {%{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}, "E", 10,
-       %{"index" => 0, "E" => 35, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}},
-      {%{"index" => 0, "E" => 25, "W" => 20, "N" => 100, "S" => 90, "direction" => "E"}, "W", 20,
-       %{"index" => 0, "E" => 25, "W" => 40, "N" => 100, "S" => 90, "direction" => "E"}},
-      {%{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}, "N", 25,
-       %{"index" => 0, "E" => 25, "W" => 0, "N" => 125, "S" => 90, "direction" => "E"}},
-      {%{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}, "S", 30,
-       %{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 120, "direction" => "E"}}
+      {%{"E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}, "E", 10,
+       %{"E" => 35, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}},
+      {%{"E" => 25, "W" => 20, "N" => 100, "S" => 90, "direction" => "E"}, "W", 20,
+       %{"E" => 25, "W" => 40, "N" => 100, "S" => 90, "direction" => "E"}},
+      {%{"E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}, "N", 25,
+       %{"E" => 25, "W" => 0, "N" => 125, "S" => 90, "direction" => "E"}},
+      {%{"E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}, "S", 30,
+       %{"E" => 25, "W" => 0, "N" => 100, "S" => 120, "direction" => "E"}}
     ]
   end
 
@@ -77,14 +77,14 @@ defmodule NavigationSystemTest do
     end
     do
     [
-      {%{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}, "L", 90,
-       %{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "N"}},
-      {%{"index" => 0, "E" => 25, "W" => 20, "N" => 100, "S" => 90, "direction" => "N"}, "R", 180,
-       %{"index" => 0, "E" => 25, "W" => 20, "N" => 100, "S" => 90, "direction" => "S"}},
-      {%{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "S"}, "L", 270,
-       %{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "W"}},
-      {%{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "W"}, "R", 90,
-       %{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "N"}}
+      {%{"E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}, "L", 90,
+       %{"E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "N"}},
+      {%{"E" => 25, "W" => 20, "N" => 100, "S" => 90, "direction" => "N"}, "R", 180,
+       %{"E" => 25, "W" => 20, "N" => 100, "S" => 90, "direction" => "S"}},
+      {%{"E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "S"}, "L", 270,
+       %{"E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "W"}},
+      {%{"E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "W"}, "R", 90,
+       %{"E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "N"}}
     ]
   end
 
@@ -98,14 +98,14 @@ defmodule NavigationSystemTest do
     end
     do
     [
-      {%{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}, "F", 90,
-       %{"index" => 0, "E" => 115, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}},
-      {%{"index" => 0, "E" => 25, "W" => 20, "N" => 280, "S" => 90, "direction" => "N"}, "F", 180,
-       %{"index" => 0, "E" => 25, "W" => 20, "N" => 460, "S" => 90, "direction" => "N"}},
-      {%{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "S"}, "F", 270,
-       %{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 360, "direction" => "S"}},
-      {%{"index" => 0, "E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "W"}, "F", 90,
-       %{"index" => 0, "E" => 25, "W" => 90, "N" => 100, "S" => 90, "direction" => "W"}}
+      {%{"E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}, "F", 90,
+       %{"E" => 115, "W" => 0, "N" => 100, "S" => 90, "direction" => "E"}},
+      {%{"E" => 25, "W" => 20, "N" => 280, "S" => 90, "direction" => "N"}, "F", 180,
+       %{"E" => 25, "W" => 20, "N" => 460, "S" => 90, "direction" => "N"}},
+      {%{"E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "S"}, "F", 270,
+       %{"E" => 25, "W" => 0, "N" => 100, "S" => 360, "direction" => "S"}},
+      {%{"E" => 25, "W" => 0, "N" => 100, "S" => 90, "direction" => "W"}, "F", 90,
+       %{"E" => 25, "W" => 90, "N" => 100, "S" => 90, "direction" => "W"}}
     ]
   end
 
@@ -114,7 +114,6 @@ defmodule NavigationSystemTest do
     instructions = [{"F", 10}, {"N", 3}, {"F", 7}, {"R", 90}, {"F", 11}]
 
     initial_navigation = %{
-      "index" => 0,
       "E" => 0,
       "W" => 0,
       "N" => 0,
@@ -123,7 +122,6 @@ defmodule NavigationSystemTest do
     }
 
     expected_navigation = %{
-      "index" => 5,
       "E" => 17,
       "W" => 0,
       "N" => 3,
@@ -140,7 +138,7 @@ defmodule NavigationSystemTest do
 
   test "Calculate distance with navigation system" do
     # Arrange
-    navigation = %{"index" => 5, "E" => 17, "W" => 0, "N" => 3, "S" => 11, "direction" => "S"}
+    navigation = %{"E" => 17, "W" => 0, "N" => 3, "S" => 11, "direction" => "S"}
     expected_distance = 25
     # Act
     distance = navigation |> NavigationSystem.calculate_distance()
@@ -213,7 +211,6 @@ defmodule NavigationSystemTest do
     instructions = [{"F", 10}, {"N", 3}, {"F", 7}, {"R", 90}, {"F", 11}]
 
     initial_navigation = %{
-      "index" => 0,
       "E" => 10,
       "N" => 1,
       "movepoint" => %{"E" => 0, "N" => 0}
@@ -222,7 +219,6 @@ defmodule NavigationSystemTest do
     expected_navigation = %{
       "E" => 4,
       "S" => 10,
-      "index" => 5,
       "movepoint" => %{"E" => 214, "S" => 72}
     }
 
