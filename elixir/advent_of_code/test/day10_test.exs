@@ -116,7 +116,7 @@ defmodule AdapterArrayTest do
     combinations = AdapterArray.get_all_combinations(adapters)
 
     # Asser
-    assert combinations == 8
+    assert combinations == 16
 
   end
 end
